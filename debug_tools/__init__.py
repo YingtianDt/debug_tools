@@ -1,3 +1,4 @@
+import os
 import sys
 import types
 import importlib
@@ -9,6 +10,11 @@ logger = logger.Logger("DEBUG TOOL")
 def reload(symbol):
     module_name = symbol.__module__
     names = symbol.__qualname__.split(".")
+
+    if module_name == "__main__":
+        module_name = os.path.splitext(os.path.basename(sys.modules["__main__"].__file__))[0]
+        __import__(module_name)
+
     ret = importlib.reload(sys.modules[module_name]) 
     for name in names:
         ret = getattr(ret, name)
